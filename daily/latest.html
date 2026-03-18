@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F5 Daily Briefing – 2026-03-18</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--card:#22263a;--border:#2e3347;--text:#e2e4ea;--muted:#8b8fa3;--accent:#76b900;--accent2:#00b4d8;--danger:#ff4d6a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.header{background:linear-gradient(135deg,#1a1d27,#22263a);border-bottom:1px solid var(--border);padding:24px 40px;display:flex;justify-content:space-between;align-items:center}
+.header-left h1{font-size:26px;font-weight:700;margin-bottom:6px}
+.header-left h1 span{color:var(--accent)}
+.header-left p{color:var(--muted);font-size:14px}
+.export-btn{background:var(--accent);color:#000;border:none;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .2s,transform .15s}
+.export-btn:hover{opacity:.9;transform:translateY(-1px)}
+.export-btn svg{width:16px;height:16px}
+.stats-bar{display:flex;gap:20px;padding:20px 40px;border-bottom:1px solid var(--border);background:var(--surface)}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 24px;min-width:160px;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;position:relative}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 16px rgba(118,185,0,.15)}
+.stat-card.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(118,185,0,.3)}
+.stat-card .num{font-size:32px;font-weight:700;color:var(--accent)}
+.stat-card .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.stat-card .hint{font-size:10px;color:var(--accent);margin-top:6px;opacity:0;transition:opacity .2s}
+.stat-card:hover .hint{opacity:1}
+.main{display:flex;gap:0;min-height:calc(100vh - 180px)}
+.charts-panel{flex:0 0 50%;padding:24px 20px 24px 40px;display:flex;flex-direction:column;gap:16px}
+.chart-container{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;flex:1;min-height:320px}
+.detail-panel{flex:1;padding:24px 40px 24px 20px;overflow-y:auto;max-height:calc(100vh - 180px)}
+.detail-panel h2{font-size:18px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.detail-panel h2 .badge{background:var(--accent);color:#000;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:13px;color:var(--muted)}
+.breadcrumb a{color:var(--accent);cursor:pointer;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+.breadcrumb .sep{color:var(--border)}
+.controls-bar{display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.controls-bar label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.controls-bar select{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:6px;font-size:13px;font-family:inherit;cursor:pointer;transition:border-color .2s}
+.controls-bar select:hover{border-color:var(--accent)}
+.controls-bar select:focus{outline:none;border-color:var(--accent)}
+.sort-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;transition:border-color .2s,background .2s;display:flex;align-items:center;gap:4px}
+.sort-btn:hover{border-color:var(--accent);background:var(--card)}
+.sort-btn.active-sort{border-color:var(--accent);color:var(--accent)}
+.reset-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:7px 12px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit;transition:color .2s,border-color .2s}
+.reset-btn:hover{color:var(--danger);border-color:var(--danger)}
+.ann-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:12px;transition:border-color .2s}
+.ann-card:hover{border-color:var(--accent)}
+.ann-card .ann-title{font-size:15px;font-weight:600;margin-bottom:8px}
+.ann-card .ann-type{display:inline-block;background:rgba(118,185,0,.15);color:var(--accent);font-size:11px;font-weight:600;padding:2px 10px;border-radius:12px;margin-bottom:10px}
+.ann-card .ann-comp-tag{display:inline-block;background:rgba(0,180,216,.15);color:var(--accent2);font-size:11px;font-weight:600;padding:2px 10px;border-radius:12px;margin-bottom:10px;margin-left:6px}
+.ann-card .ann-date-tag{display:inline-block;background:rgba(255,255,255,.06);color:var(--muted);font-size:11px;font-weight:600;padding:2px 10px;border-radius:12px;margin-bottom:10px;margin-left:6px}
+.ann-card .ann-summary{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.ann-card .source-link{display:inline-flex;align-items:center;gap:4px;color:var(--accent2);font-size:12px;text-decoration:none;font-weight:500}
+.ann-card .source-link:hover{text-decoration:underline}
+.comp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:border-color .2s,background .2s}
+.comp-card:hover{border-color:var(--accent);background:var(--card)}
+.comp-card .name{font-size:14px;font-weight:600}
+.comp-card .cat{font-size:11px;color:var(--muted);margin-top:2px}
+.comp-card .count{background:var(--accent);color:#000;font-size:12px;font-weight:700;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.comp-card .no-ann{color:var(--muted);font-size:11px;font-style:italic}
+.comp-card.inactive{opacity:.5;cursor:default}
+.comp-card.inactive:hover{border-color:var(--border);background:var(--surface)}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:border-color .2s,background .2s}
+.cat-card:hover{border-color:var(--accent);background:var(--card)}
+.cat-card .cat-name{font-size:14px;font-weight:600}
+.cat-card .cat-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.cat-card .cat-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:8px}
+.cat-card .cat-counts{display:flex;gap:12px;align-items:center}
+.pill{font-size:11px;padding:2px 10px;border-radius:12px;font-weight:600}
+.pill-comp{background:rgba(0,180,216,.15);color:var(--accent2)}
+.pill-ann{background:rgba(118,185,0,.15);color:var(--accent)}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state .icon{font-size:48px;margin-bottom:12px}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:20px 0 8px;font-weight:600}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px}
+.status-active{background:var(--accent)}
+.status-inactive{background:#444}
+.filter-count{font-size:12px;color:var(--muted);margin-bottom:12px}
+.filter-count strong{color:var(--accent)}
+.inactive-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.inactive-chip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>F5 Competitor Daily Briefing &ndash; <span>Tuesday, March 18, 2026</span></h1>
+    <p>Daily competitive intelligence &middot; News, announcements &amp; product launches from F5 competitors &middot; <a href="../index.html" style="color:var(--accent);text-decoration:none">&larr; Back to Hub</a></p>
+  </div>
+  <div class="header-right">
+    <button class="export-btn" id="exportBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export CSV
+    </button>
+  </div>
+</div>
+<div class="stats-bar">
+  <div class="stat-card" id="stat-tracked" data-action="stat-tracked"><div class="num">18</div><div class="label">Competitors Tracked</div><div class="hint">&#9654; Click to see all competitors</div></div>
+  <div class="stat-card" id="stat-ann" data-action="stat-ann"><div class="num">5</div><div class="label">Announcements Found</div><div class="hint">&#9654; Click to see all announcements</div></div>
+  <div class="stat-card" id="stat-active" data-action="stat-active"><div class="num">5</div><div class="label">Active Today</div><div class="hint">&#9654; Click to see active competitors</div></div>
+  <div class="stat-card" id="stat-cats" data-action="stat-cats"><div class="num">5</div><div class="label">Active Categories</div><div class="hint">&#9654; Click to see category breakdown</div></div>
+</div>
+<div class="main">
+  <div class="charts-panel">
+    <div class="chart-container" id="chart-competitor"></div>
+    <div class="chart-container" id="chart-category"></div>
+  </div>
+  <div class="detail-panel" id="detail-panel"></div>
+</div>
+<script>
+(function() {
+"use strict";
+
+var DATA = {"Cloudflare": {"category": "CDN / Edge / App Delivery", "announcements": [{"title": "Cloudflare Introduces Custom Regions for Precision Data Control", "summary": "Cloudflare launched Custom Regions as part of its Regional Services platform, allowing customers to define tailored data processing regions beyond the 35 pre-defined ones. New regions include Turkey, UAE, IRAP (Australian compliance), and ISMAP (Japanese compliance). The platform maintains global security while enabling local data inspection for sovereignty and compliance.", "source_url": "https://blog.cloudflare.com/custom-regions/", "type": "Product Launch", "date": "2026-03-18"}]}, "Check Point Software": {"category": "Network Security / Firewall", "announcements": [{"title": "Check Point Enables Email Security Telemetry to Flow into CrowdStrike Falcon Next-Gen SIEM", "summary": "Check Point announced a new integration enabling email security telemetry from Check Point Email Security to flow into CrowdStrike Falcon Next-Gen SIEM. This allows security teams to correlate email activity with endpoint and identity signals, enhancing investigation and response capabilities across the unified CrowdStrike platform.", "source_url": "https://finance.yahoo.com/news/check-point-enables-email-security-130000280.html", "type": "Product Integration", "date": "2026-03-18"}]}, "CrowdStrike": {"category": "Zero Trust / Cloud Security", "announcements": [{"title": "CrowdStrike Extends Agentic AI Alliance with NVIDIA", "summary": "CrowdStrike expanded its agentic AI alliance with NVIDIA, integrating additional AI agents into managed detection and response (MDR) services using NVIDIA's Nemotron Nano and Super AI models. The company also announced a Secure-by-Design AI Blueprint incorporated into NVIDIA OpenShell for enhanced security governance of autonomous AI agents.", "source_url": "https://securityboulevard.com/2026/03/crowdstrike-extends-agentic-ai-alliance-with-nvidia/", "type": "Strategic Partnership", "date": "2026-03-18"}]}, "Cisco": {"category": "Networking Infrastructure", "announcements": [{"title": "Cisco and NVIDIA Unveil Secure AI Edge Framework", "summary": "Cisco and NVIDIA announced an expanded secure AI edge framework integrating compute, networking, and security for deploying AI across data centers and edge locations. Supports NVIDIA RTX PRO 4500 Blackwell GPUs for enterprise edge AI inference, introduces Cisco AI Grid for service providers, and new N9100 switches based on NVIDIA Spectrum silicon.", "source_url": "https://datacentrenews.uk/story/cisco-and-nvidia-unveil-new-secure-ai-edge-framework", "type": "Product Launch / Partnership", "date": "2026-03-18"}]}, "HAProxy (emerging competitor)": {"category": "ADC / Load Balancing", "announcements": [{"title": "HAProxy Technologies Announces HAProxy Fusion 2.0", "summary": "HAProxy Technologies launched Fusion 2.0, a major upgrade featuring a unified security control plane with visual policy management, native bot and attack detection via the Threat Detection Engine, and enhanced automation including Kubernetes deployment via Fusion Operator, Terraform, and Ansible. Targets large multi-cloud environments.", "source_url": "https://cioinfluence.com/security/haproxy-technologies-announces-haproxy-fusion-2-0-with-a-unified-security-control-plane-and-hyperscale-automation/", "type": "Product Launch", "date": "2026-03-17"}]}, "Akamai": {"category": "CDN / Edge / App Delivery", "announcements": []}, "Fastly": {"category": "CDN / Edge / App Delivery", "announcements": []}, "Citrix (NetScaler)": {"category": "ADC / Load Balancing", "announcements": []}, "A10 Networks": {"category": "ADC / Load Balancing", "announcements": []}, "Palo Alto Networks": {"category": "Network Security / Firewall", "announcements": []}, "Fortinet": {"category": "Network Security / Firewall", "announcements": []}, "Zscaler": {"category": "Zero Trust / Cloud Security", "announcements": []}, "Arista Networks": {"category": "Networking Infrastructure", "announcements": []}, "HPE / Juniper Networks": {"category": "Networking Infrastructure", "announcements": []}, "AWS": {"category": "Cloud Platform / Infrastructure", "announcements": []}, "Radware": {"category": "WAF / DDoS Protection", "announcements": []}, "Barracuda Networks": {"category": "WAF / DDoS Protection", "announcements": []}, "Imperva (Thales)": {"category": "WAF / DDoS Protection", "announcements": []}};
+
+var catColors = {
+  "ADC / Load Balancing": "#636efa",
+  "CDN / Edge / App Delivery": "#ef553b",
+  "Network Security / Firewall": "#00cc96",
+  "Zero Trust / Cloud Security": "#ab63fa",
+  "Networking Infrastructure": "#ffa15a",
+  "Cloud Platform / Infrastructure": "#19d3f3",
+  "WAF / DDoS Protection": "#ff6692"
+};
+var compColorList = ["#76b900","#00b4d8","#ef553b","#ab63fa","#ffa15a","#19d3f3","#ff6692","#636efa","#00cc96","#b6e880","#ff97ff","#fecb52","#1cbe4f","#c4446c","#2ed9ff","#fe00fa","#b68100"];
+
+// Build flat announcement list
+var ALL_ANN = [];
+var names = Object.keys(DATA);
+for (var i = 0; i < names.length; i++) {
+  var nm = names[i];
+  var info = DATA[nm];
+  for (var j = 0; j < info.announcements.length; j++) {
+    var a = info.announcements[j];
+    ALL_ANN.push({title:a.title, summary:a.summary, source_url:a.source_url, type:a.type, date:a.date, competitor:nm, category:info.category});
+  }
+}
+
+// Aggregates
+var compCounts = {};
+var catCounts = {};
+for (var i = 0; i < names.length; i++) {
+  var nm = names[i], n = DATA[nm].announcements.length;
+  if (n > 0) compCounts[nm] = n;
+  if (!catCounts[DATA[nm].category]) catCounts[DATA[nm].category] = 0;
+  catCounts[DATA[nm].category] += n;
+}
+
+// CSV Export
+document.getElementById("exportBtn").addEventListener("click", function() {
+  var headers = ["Date","Competitor","Category","Type","Title","Summary","Source URL"];
+  var rows = [headers.join(",")];
+  for (var i = 0; i < ALL_ANN.length; i++) {
+    var a = ALL_ANN[i];
+    rows.push([a.date, q(a.competitor), q(a.category), q(a.type), q(a.title), q(a.summary), a.source_url].join(","));
+  }
+  var blob = new Blob([rows.join("\n")], {type:"text/csv;charset=utf-8;"});
+  var link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "f5_competitor_gtc2026_announcements.csv";
+  link.click();
+});
+function q(s) { return '"' + String(s).replace(/"/g, '""') + '"'; }
+
+// Charts
+var plotLayout = {
+  paper_bgcolor:"rgba(0,0,0,0)", plot_bgcolor:"rgba(0,0,0,0)",
+  font:{family:"Segoe UI,system-ui,sans-serif",color:"#e2e4ea",size:12},
+  margin:{t:40,b:10,l:10,r:10}, showlegend:true,
+  legend:{font:{size:11},orientation:"v",x:1.02,y:0.5}
+};
+var compLabels = Object.keys(compCounts), compValues = [];
+for (var i=0;i<compLabels.length;i++) compValues.push(compCounts[compLabels[i]]);
+Plotly.newPlot("chart-competitor",[{type:"pie",labels:compLabels,values:compValues,textinfo:"label+value",textposition:"inside",hoverinfo:"label+value+percent",marker:{colors:compColorList.slice(0,compLabels.length),line:{color:"#0f1117",width:2}},hole:.35,sort:false}],Object.assign({},plotLayout,{title:{text:"Announcements by Competitor",font:{size:15,color:"#e2e4ea"},x:.01}}),{responsive:true,displayModeBar:false});
+
+var catLabels=[],catValues=[],catClrs=[];
+var allCatKeys = Object.keys(catCounts);
+for(var i=0;i<allCatKeys.length;i++){if(catCounts[allCatKeys[i]]>0){catLabels.push(allCatKeys[i]);catValues.push(catCounts[allCatKeys[i]]);catClrs.push(catColors[allCatKeys[i]]||"#888");}}
+Plotly.newPlot("chart-category",[{type:"pie",labels:catLabels,values:catValues,textinfo:"label+value",textposition:"inside",hoverinfo:"label+value+percent",marker:{colors:catClrs,line:{color:"#0f1117",width:2}},hole:.35,sort:false}],Object.assign({},plotLayout,{title:{text:"Announcements by Category",font:{size:15,color:"#e2e4ea"},x:.01}}),{responsive:true,displayModeBar:false});
+
+// Pie click handlers
+document.getElementById("chart-competitor").on("plotly_click",function(d){showCompetitor(d.points[0].label);});
+document.getElementById("chart-category").on("plotly_click",function(d){showCategory(d.points[0].label);});
+
+// Stat card click handlers
+document.querySelectorAll(".stat-card").forEach(function(el){
+  el.addEventListener("click",function(){
+    var action = this.getAttribute("data-action");
+    if(action==="stat-tracked") showStatTracked();
+    else if(action==="stat-ann") showStatAnnouncements();
+    else if(action==="stat-active") showStatActive();
+    else if(action==="stat-cats") showStatCategories();
+  });
+});
+
+var panel = document.getElementById("detail-panel");
+
+// Helpers
+function clearStatActive(){document.querySelectorAll(".stat-card").forEach(function(e){e.classList.remove("active");});}
+
+function fmtDate(d){var dt=new Date(d+"T12:00:00");return dt.toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"});}
+
+function annCardHTML(a, showComp){
+  var tags='<span class="ann-type">'+esc(a.type)+'</span>';
+  if(showComp) tags+='<span class="ann-comp-tag">'+esc(a.competitor)+'</span>';
+  tags+='<span class="ann-date-tag">'+fmtDate(a.date)+'</span>';
+  return '<div class="ann-card"><div>'+tags+'</div><div class="ann-title">'+esc(a.title)+'</div><div class="ann-summary">'+esc(a.summary)+'</div><a class="source-link" href="'+a.source_url+'" target="_blank" rel="noopener">&#8599; View Full Source</a></div>';
+}
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function compCard(name, info, opts){
+  opts=opts||{};
+  var dot=opts.dot?'<span class="status-dot '+(info.announcements.length>0?"status-active":"status-inactive")+'"></span>':"";
+  if(info.announcements.length===0 && !opts.showInactive) return "";
+  var cls="comp-card"+(info.announcements.length===0?" inactive":"");
+  var right=info.announcements.length>0?'<div class="count">'+info.announcements.length+'</div>':'<div class="no-ann">'+(opts.inactiveText||"none")+'</div>';
+  var sub=info.category;
+  if(opts.showTypes && info.announcements.length>0){
+    var types=[];for(var j=0;j<info.announcements.length;j++){if(types.indexOf(info.announcements[j].type)===-1)types.push(info.announcements[j].type);}
+    sub+=" &middot; "+types.join(", ");
+  }
+  return '<div class="'+cls+'" data-comp="'+esc(name)+'"><div><div class="name">'+dot+esc(name)+'</div><div class="cat">'+sub+'</div></div>'+right+'</div>';
+}
+
+// Event delegation for comp-card clicks
+panel.addEventListener("click",function(e){
+  var card=e.target.closest(".comp-card:not(.inactive)");
+  if(card && card.dataset.comp){showCompetitor(card.dataset.comp);return;}
+  var catCard=e.target.closest(".cat-card");
+  if(catCard && catCard.dataset.cat){showCategory(catCard.dataset.cat);return;}
+  var compLabel=e.target.closest("[data-showcomp]");
+  if(compLabel){showCompetitor(compLabel.dataset.showcomp);return;}
+  var bc=e.target.closest("[data-nav]");
+  if(bc){
+    var nav=bc.dataset.nav;
+    if(nav==="overview") showOverview();
+    else if(nav==="categories") showStatCategories();
+  }
+  // Sort buttons
+  var sortBtn=e.target.closest(".sort-btn");
+  if(sortBtn){
+    var sk=sortBtn.dataset.sort;
+    sortBtn.parentElement.querySelectorAll(".sort-btn").forEach(function(b){b.classList.remove("active-sort");});
+    sortBtn.classList.add("active-sort");
+    currentSort=sk;
+    applyFilters();
+  }
+  var resetBtn=e.target.closest(".reset-btn");
+  if(resetBtn){resetFilters();}
+});
+panel.addEventListener("change",function(e){
+  if(e.target.matches("select")){applyFilters();}
+});
+
+// ═══ VIEWS ═══
+function showOverview(){
+  clearStatActive();
+  var h='<h2>All Competitors <span class="badge">click a pie wedge or stat card to drill down</span></h2>';
+  h+='<div class="section-label">With Today Announcements</div>';
+  for(var i=0;i<names.length;i++){if(DATA[names[i]].announcements.length>0) h+=compCard(names[i],DATA[names[i]]);}
+  h+='<div class="section-label">No Today Announcements Found</div>';
+  for(var i=0;i<names.length;i++){if(DATA[names[i]].announcements.length===0) h+=compCard(names[i],DATA[names[i]],{showInactive:true});}
+  panel.innerHTML=h;
+}
+
+function showStatTracked(){
+  clearStatActive();document.getElementById("stat-tracked").classList.add("active");
+  var h='<div class="breadcrumb"><a data-nav="overview">Overview</a><span class="sep">&rsaquo;</span><span>All 17 Competitors Tracked</span></div>';
+  h+='<h2>Competitors Tracked <span class="badge">5 total</span></h2>';
+  h+='<p style="color:var(--muted);font-size:13px;margin-bottom:18px">All F5 competitors identified across 7 categories, sorted by today's activity.</p>';
+  h+='<div class="section-label"><span class="status-dot status-active"></span> Active Today 2026 (11)</div>';
+  for(var i=0;i<names.length;i++){if(DATA[names[i]].announcements.length>0) h+=compCard(names[i],DATA[names[i]],{dot:true});}
+  h+='<div class="section-label"><span class="status-dot status-inactive"></span> Not Active Today 2026 (6)</div>';
+  for(var i=0;i<names.length;i++){if(DATA[names[i]].announcements.length===0) h+=compCard(names[i],DATA[names[i]],{dot:true,showInactive:true,inactiveText:"0 announcements"});}
+  panel.innerHTML=h;
+}
+
+var currentSort="date-asc";
+function showStatAnnouncements(){
+  clearStatActive();document.getElementById("stat-ann").classList.add("active");
+  var dates={},cats={},comps={};
+  for(var i=0;i<ALL_ANN.length;i++){dates[ALL_ANN[i].date]=1;cats[ALL_ANN[i].category]=1;comps[ALL_ANN[i].competitor]=1;}
+  var dateKeys=Object.keys(dates).sort(),catKeys=Object.keys(cats).sort(),compKeys=Object.keys(comps).sort();
+  var h='<div class="breadcrumb"><a data-nav="overview">Overview</a><span class="sep">&rsaquo;</span><span>All Announcements</span></div>';
+  h+='<h2>All Announcements <span class="badge">5 total</span></h2>';
+  h+='<div class="controls-bar"><label>Sort:</label>';
+  h+='<button class="sort-btn active-sort" data-sort="date-asc">Date &#8593;</button>';
+  h+='<button class="sort-btn" data-sort="date-desc">Date &#8595;</button>';
+  h+='<button class="sort-btn" data-sort="comp-asc">Competitor A-Z</button>';
+  h+='<span style="margin-left:8px"></span><label>Date:</label><select id="filterDate"><option value="all">All dates</option>';
+  for(var i=0;i<dateKeys.length;i++) h+='<option value="'+dateKeys[i]+'">'+fmtDate(dateKeys[i])+'</option>';
+  h+='</select><label>Category:</label><select id="filterCat"><option value="all">All categories</option>';
+  for(var i=0;i<catKeys.length;i++) h+='<option value="'+esc(catKeys[i])+'">'+esc(catKeys[i])+'</option>';
+  h+='</select><label>Competitor:</label><select id="filterComp"><option value="all">All competitors</option>';
+  for(var i=0;i<compKeys.length;i++) h+='<option value="'+esc(compKeys[i])+'">'+esc(compKeys[i])+'</option>';
+  h+='</select><button class="reset-btn">&#10005; Reset</button></div>';
+  h+='<div class="filter-count" id="filterCount">Showing <strong>'+ALL_ANN.length+'</strong> of '+ALL_ANN.length+' announcements</div>';
+  h+='<div id="annList"></div>';
+  panel.innerHTML=h;
+  currentSort="date-asc";
+  applyFilters();
+}
+
+function applyFilters(){
+  var dateEl=document.getElementById("filterDate");
+  var catEl=document.getElementById("filterCat");
+  var compEl=document.getElementById("filterComp");
+  if(!dateEl) return;
+  var dv=dateEl.value, cv=catEl.value, mv=compEl.value;
+  var filtered=[];
+  for(var i=0;i<ALL_ANN.length;i++){
+    var a=ALL_ANN[i];
+    if(dv!=="all" && a.date!==dv) continue;
+    if(cv!=="all" && a.category!==cv) continue;
+    if(mv!=="all" && a.competitor!==mv) continue;
+    filtered.push(a);
+  }
+  if(currentSort==="date-asc") filtered.sort(function(a,b){return a.date.localeCompare(b.date);});
+  else if(currentSort==="date-desc") filtered.sort(function(a,b){return b.date.localeCompare(a.date);});
+  else if(currentSort==="comp-asc") filtered.sort(function(a,b){return a.competitor.localeCompare(b.competitor);});
+  var listEl=document.getElementById("annList");
+  var countEl=document.getElementById("filterCount");
+  if(countEl) countEl.innerHTML='Showing <strong>'+filtered.length+'</strong> of '+ALL_ANN.length+' announcements';
+  var h="";
+  for(var i=0;i<filtered.length;i++) h+=annCardHTML(filtered[i],true);
+  if(filtered.length===0) h='<div class="empty-state"><div class="icon">&#128269;</div><p>No announcements match the current filters.</p></div>';
+  listEl.innerHTML=h;
+}
+
+function resetFilters(){
+  var dateEl=document.getElementById("filterDate");
+  var catEl=document.getElementById("filterCat");
+  var compEl=document.getElementById("filterComp");
+  if(dateEl) dateEl.value="all";
+  if(catEl) catEl.value="all";
+  if(compEl) compEl.value="all";
+  currentSort="date-asc";
+  var btns=document.querySelectorAll(".sort-btn");
+  btns.forEach(function(b){b.classList.remove("active-sort");if(b.dataset.sort==="date-asc")b.classList.add("active-sort");});
+  applyFilters();
+}
+
+function showStatActive(){
+  clearStatActive();document.getElementById("stat-active").classList.add("active");
+  var sorted=[];
+  for(var i=0;i<names.length;i++){if(DATA[names[i]].announcements.length>0) sorted.push([names[i],DATA[names[i]]]);}
+  sorted.sort(function(a,b){return b[1].announcements.length-a[1].announcements.length;});
+  var h='<div class="breadcrumb"><a data-nav="overview">Overview</a><span class="sep">&rsaquo;</span><span>Active Today 2026</span></div>';
+  h+='<h2>Active Today <span class="badge">5 competitors</span></h2>';
+  h+='<p style="color:var(--muted);font-size:13px;margin-bottom:18px">Competitors with at least one announcement, partnership, or session at NVIDIA Today. Ranked by activity.</p>';
+  for(var i=0;i<sorted.length;i++) h+=compCard(sorted[i][0],sorted[i][1],{dot:true,showTypes:true});
+  h+='<div class="section-label" style="margin-top:24px">Not Present at Today</div><div class="inactive-chips">';
+  for(var i=0;i<names.length;i++){if(DATA[names[i]].announcements.length===0) h+='<span class="inactive-chip">'+esc(names[i])+'</span>';}
+  h+='</div>';
+  panel.innerHTML=h;
+}
+
+function showStatCategories(){
+  clearStatActive();document.getElementById("stat-cats").classList.add("active");
+  var allCats={};
+  for(var i=0;i<names.length;i++){
+    var cat=DATA[names[i]].category;
+    if(!allCats[cat]) allCats[cat]={comps:[],ann:0};
+    allCats[cat].comps.push({name:names[i],count:DATA[names[i]].announcements.length});
+    allCats[cat].ann+=DATA[names[i]].announcements.length;
+  }
+  var catOrder=Object.keys(allCats).sort(function(a,b){return allCats[b].ann-allCats[a].ann;});
+  var h='<div class="breadcrumb"><a data-nav="overview">Overview</a><span class="sep">&rsaquo;</span><span>Competitor Categories</span></div>';
+  h+='<h2>Competitor Categories <span class="badge">7 categories</span></h2>';
+  h+='<p style="color:var(--muted);font-size:13px;margin-bottom:18px">F5 competitor landscape organized by market segment. Click a category to drill into its announcements.</p>';
+  for(var ci=0;ci<catOrder.length;ci++){
+    var cat=catOrder[ci],d=allCats[cat],color=catColors[cat]||"#888";
+    var activeN=0;var compNames=[];
+    for(var j=0;j<d.comps.length;j++){compNames.push(d.comps[j].name);if(d.comps[j].count>0)activeN++;}
+    h+='<div class="cat-card" data-cat="'+esc(cat)+'"><div><div class="cat-name"><span class="cat-dot" style="background:'+color+'"></span>'+esc(cat)+'</div>';
+    h+='<div class="cat-meta">'+d.comps.length+' competitor'+(d.comps.length!==1?"s":"")+" &middot; "+activeN+' active at GTC &middot; '+compNames.join(", ")+'</div></div>';
+    h+='<div class="cat-counts"><span class="pill pill-comp">'+d.comps.length+' comp.</span><span class="pill pill-ann">'+d.ann+' ann.</span></div></div>';
+  }
+  panel.innerHTML=h;
+}
+
+function showCompetitor(name){
+  clearStatActive();
+  var info=DATA[name];
+  if(!info) return;
+  var h='<div class="breadcrumb"><a data-nav="overview">Overview</a><span class="sep">&rsaquo;</span><span>'+esc(name)+'</span></div>';
+  h+='<h2>'+esc(name)+' <span class="badge">'+info.announcements.length+' announcement'+(info.announcements.length!==1?"s":"")+'</span></h2>';
+  h+='<p style="color:var(--muted);font-size:13px;margin-bottom:18px">Category: <strong style="color:var(--text)">'+esc(info.category)+'</strong></p>';
+  if(info.announcements.length===0){
+    h+='<div class="empty-state"><div class="icon">&#128236;</div><p>No Today announcements found for this competitor.</p></div>';
+  } else {
+    var sorted=info.announcements.slice().sort(function(a,b){return a.date.localeCompare(b.date);});
+    for(var i=0;i<sorted.length;i++){
+      var a=sorted[i];
+      h+='<div class="ann-card"><div><span class="ann-type">'+esc(a.type)+'</span><span class="ann-date-tag">'+fmtDate(a.date)+'</span></div>';
+      h+='<div class="ann-title">'+esc(a.title)+'</div><div class="ann-summary">'+esc(a.summary)+'</div>';
+      h+='<a class="source-link" href="'+a.source_url+'" target="_blank" rel="noopener">&#8599; View Full Source</a></div>';
+    }
+  }
+  panel.innerHTML=h;
+}
+
+function showCategory(category){
+  clearStatActive();
+  var comps=[],activeComps=[];
+  for(var i=0;i<names.length;i++){
+    if(DATA[names[i]].category===category){comps.push([names[i],DATA[names[i]]]);if(DATA[names[i]].announcements.length>0)activeComps.push([names[i],DATA[names[i]]]);}
+  }
+  var total=0;for(var i=0;i<comps.length;i++) total+=comps[i][1].announcements.length;
+  var h='<div class="breadcrumb"><a data-nav="overview">Overview</a><span class="sep">&rsaquo;</span><a data-nav="categories">Categories</a><span class="sep">&rsaquo;</span><span>'+esc(category)+'</span></div>';
+  h+='<h2>'+esc(category)+' <span class="badge">'+total+' announcement'+(total!==1?"s":"")+'</span></h2>';
+  h+='<p style="color:var(--muted);font-size:13px;margin-bottom:18px">'+comps.length+' competitor'+(comps.length!==1?"s":"")+" in this category, "+activeComps.length+' active at GTC.</p>';
+  if(activeComps.length===0){
+    h+='<div class="empty-state"><div class="icon">&#128236;</div><p>No Today announcements found for competitors in this category.</p></div>';
+  }
+  for(var i=0;i<activeComps.length;i++){
+    var nm=activeComps[i][0],inf=activeComps[i][1];
+    h+='<div class="section-label" style="margin-top:24px;cursor:pointer;color:var(--accent)" data-showcomp="'+esc(nm)+'">'+esc(nm)+' ('+inf.announcements.length+') &#8599;</div>';
+    var sorted=inf.announcements.slice().sort(function(a,b){return a.date.localeCompare(b.date);});
+    for(var j=0;j<sorted.length;j++){
+      var a=sorted[j];
+      h+='<div class="ann-card"><div><span class="ann-type">'+esc(a.type)+'</span><span class="ann-date-tag">'+fmtDate(a.date)+'</span></div>';
+      h+='<div class="ann-title">'+esc(a.title)+'</div><div class="ann-summary">'+esc(a.summary)+'</div>';
+      h+='<a class="source-link" href="'+a.source_url+'" target="_blank" rel="noopener">&#8599; View Full Source</a></div>';
+    }
+  }
+  var inactiveComps=comps.filter(function(c){return c[1].announcements.length===0;});
+  if(inactiveComps.length>0){
+    h+='<div class="section-label" style="margin-top:20px">No News Today</div><div class="inactive-chips">';
+    for(var i=0;i<inactiveComps.length;i++) h+='<span class="inactive-chip">'+esc(inactiveComps[i][0])+'</span>';
+    h+='</div>';
+  }
+  panel.innerHTML=h;
+}
+
+// Init
+showOverview();
+})();
+</script>
+</body>
+</html>
