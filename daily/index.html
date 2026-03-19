@@ -3,44 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>F5 Daily Briefing Archive</title>
+<title>F5 Competitive Intelligence – Daily Archive</title>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d27;--card:#22263a;--border:#2e3347;--text:#e2e4ea;--muted:#8b8fa3;--accent:#76b900;--accent2:#00b4d8}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-.header{background:linear-gradient(135deg,#1a1d27,#22263a);border-bottom:1px solid var(--border);padding:32px 40px}
-.header h1{font-size:24px;font-weight:700;margin-bottom:6px}
-.header h1 span{color:var(--accent)}
-.header p{color:var(--muted);font-size:14px}
-.nav{padding:12px 40px;background:var(--surface);border-bottom:1px solid var(--border);font-size:13px}
-.nav a{color:var(--accent);text-decoration:none}
-.nav a:hover{text-decoration:underline}
-.nav .sep{color:var(--border);margin:0 8px}
-.content{max-width:800px;margin:0 auto;padding:32px 40px}
-.day-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .2s,transform .1s;text-decoration:none;color:var(--text)}
-.day-card:hover{border-color:var(--accent);transform:translateX(4px)}
-.day-card .date{font-weight:600;font-size:15px}
-.day-card .day-meta{font-size:12px;color:var(--muted);margin-top:2px}
-.day-card .count{background:var(--accent);color:#000;font-size:12px;font-weight:700;padding:4px 12px;border-radius:12px}
-.empty{text-align:center;padding:60px;color:var(--muted)}
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --border: #2d3148;
+    --text: #e2e8f0; --text2: #94a3b8; --accent: #6366f1; --accent2: #818cf8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; line-height:1.6; }
+  .container { max-width:900px; margin:0 auto; padding:32px 24px; }
+  .header { text-align:center; margin-bottom:32px; }
+  .header h1 { font-size:1.8rem; font-weight:700; background:linear-gradient(135deg,#6366f1,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .header p { color:var(--text2); margin-top:8px; }
+  .header a { color:var(--accent2); text-decoration:none; }
+  .header a:hover { text-decoration:underline; }
+  table { width:100%; border-collapse:collapse; background:var(--surface); border-radius:12px; overflow:hidden; }
+  th { background:var(--accent); color:#fff; padding:14px 20px; text-align:left; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.5px; }
+  td { padding:14px 20px; border-bottom:1px solid var(--border); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(99,102,241,0.05); }
+  td a { color:var(--accent2); text-decoration:none; }
+  td a:hover { text-decoration:underline; }
+  .empty { text-align:center; padding:48px; color:var(--text2); }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1><span>F5</span> Daily Briefing Archive</h1>
-  <p>Past daily competitive intelligence briefings &middot; 90-day retention</p>
-</div>
-<div class="nav">
-  <a href="../index.html">Hub</a><span class="sep">&rsaquo;</span><span>Daily Archive</span>
-</div>
-<div class="content">
-  <a class="day-card" href="2026-03-18.html">
-    <div>
-      <div class="date">Tuesday, March 18, 2026</div>
-      <div class="day-meta">GTC 2026 Day 3 &middot; Cloudflare, CrowdStrike, Check Point, Cisco, HAProxy</div>
-    </div>
-    <div class="count">5 items</div>
-  </a>
+<div class="container">
+  <div class="header">
+    <h1>Daily Briefing Archive</h1>
+    <p><a href="../index.html">&larr; Back to Hub</a></p>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Date</th><th>File</th><th>Announcements</th></tr>
+    </thead>
+    <tbody>
+      
+    <tr>
+      <td><a href="2026-03-18.html">March 18, 2026</a></td>
+      <td>2026-03-18</td>
+      <td>25</td>
+    </tr>
+    </tbody>
+  </table>
 </div>
 </body>
 </html>
